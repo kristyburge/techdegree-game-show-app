@@ -5,7 +5,6 @@ const qwerty = document.querySelector('#qwerty');
 const phrase = document.querySelector('#phrase');
 const overlay = document.querySelector('#overlay');
 const startButton = document.querySelector('.btn__reset');
-const message = document.querySelector('.message');
 
 const ul = phrase.firstElementChild;
 const li = ul.children;   // letters in the phrase
