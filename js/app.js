@@ -1,6 +1,12 @@
 // GAME RULES:
-// track number of guesses the player misses
-// if the player guesses wrong 5 times, lose game
+// Guess the phrase by selecting a letter on the screen's keyboard
+// You get 5 chances.
+// Guess the phrase before you run out of turns!
+// Guess 5 wrong letters and you lose the game.
+
+// =================
+// Global variables
+// =================
 const qwerty = document.querySelector('#qwerty');
 const phrase = document.querySelector('#phrase');
 const overlay = document.querySelector('#overlay');
@@ -26,75 +32,78 @@ lose.textContent = 'Bummer! You lost this round. Play again?';
 
 let guessesMissed, letterFound;
 
+// =================================================
 // Hide the overlay when the start button is clicked
+// =================================================
 startButton.addEventListener('click', function(){
   // Game states for overlay
-
   if (overlay.className === 'start') {
-    // 1: start
+    // 1: Start
     overlay.classList.remove('start');
     overlay.style.display = 'none';
   } else if (overlay.className === 'win') {
-    // 2: win
+    // 2: Win
     overlay.removeChild(win);
     overlay.classList.remove('win');
     overlay.style.display = 'none';
   } else if (overlay.className === 'lose') {
-    // 3: lose`
+    // 3: Lose
     overlay.removeChild(lose);
     overlay.classList.remove('lose');
     overlay.style.display = 'none';
   }
-
-  // initialize the game
+  // Initialize the game
   init();
-
 });
 
+// ========================
 // Generate a random phrase
+// ========================
 function getRandomPhraseAsArray(arr){
-  // remove 1 from the array length to get the max number (inclusive)
+  // Remove 1 from the array length to get the max number (inclusive)
   const length = arr.length - 1;
-
-  // generate a random number between 0 and length
+  // Generate a random number between 0 and length
   const choose = getRandomNumber(0, length);
   const currentPhrase = arr[choose];
-
-  // split the phrase into array of individual characters
+  // Split the phrase into array of individual characters
   const letters = currentPhrase.split('');
-
   return letters;
 }
 
+// ========================
 // Generate a random number
+// ========================
 function getRandomNumber(min, max) {
   return Math.floor( Math.random() * (max - min + 1) ) + min;
 }
 
+// ====================
 // Set the game display
+// ====================
 function addPhraseToDisplay(arr) {
-
   // loop through array of characters
   for (let i = 0; i < arr.length; i++) {
     const letter = arr[i];
-    // for each character, create a list item
+    // For each character, create a list item
     const item = document.createElement('li');
-    // put each character inside the list item
+    // Put each character inside the list item
     item.textContent = letter;
 
-    // if the character is NOT a space, add the class "letter" to the list item
+    // Add the appropriate class to the list items
     if (letter !== " ") {
       item.className = 'letter';
     } else {
       item.className = 'space';
     }
 
-    // append the list item to the DOM (specifically to the #phrase ul )
+    // Append the list item to the DOM (specifically to the #phrase ul )
     ul.appendChild(item);
   }
 }
 
+// ==========================================================
 // Check if the letter chosen matches a letter in the phrase
+// ==========================================================
 function checkLetter(guessBtn) {
   // Loop through the characters in the phrase
   for (let i = 0; i < li.length; i++) {
@@ -111,15 +120,19 @@ function checkLetter(guessBtn) {
     }
   }
 
-  // return the matching letter guessed correct;
-  // otherwise, return null for incorrect guess
+  // Return the matching letter guessed correct;
+  // Otherwise, return null for incorrect guess
   return letterFound;
 }
 
-function checkWin(){
-  //check if the number of letters with class “show” is equal to the number of letters with class “letters”.
 
-// STEP 1:
+// ===============================================
+// Check if the number of letters with class “show”
+// is equal to the number of letters with class “letters”.
+// ===============================================
+function checkWin(){
+  // Initialize the counters
+  // Counter 1 - 'show' class:
   const listItemArray = document.querySelector('ul').children;
 
   let counterShow = 0;
@@ -130,7 +143,7 @@ function checkWin(){
     }
   }
 
-// STEP 2:
+// Counter 2 - 'letter' class:
   let counterLetters = 0;
   for (let i = 0; i < listItemArray.length; i++) {
     // count the number of letters (exclude spaces) in the phrase
@@ -140,12 +153,12 @@ function checkWin(){
   }
   // console.log(guessesMissed);
 
-    // check for a win
+    // Check for a win
     if ( counterShow === counterLetters ) {
 
-      // wait for the animation to complete
+      // Wait for the animation to complete
       setTimeout(function(){
-        // display win overlay
+        // Display win overlay
         overlay.style.display = 'flex';
         overlay.classList.add('win');
         overlay.appendChild(win);
@@ -165,7 +178,7 @@ function checkWin(){
           } else if (guessesMissed === 5) {
 
             // Give animation time to finish
-            // Disable the rest of the buttons
+            // Disable the rest of the buttons in meantime
             const buttons = document.querySelectorAll('#qwerty button');
             for (let i = 0; i < buttons.length; i++) {
               buttons[i].setAttribute('disabled', '');
@@ -182,7 +195,9 @@ function checkWin(){
     }
 }
 
-
+// ==============
+//
+// =============
 qwerty.addEventListener('click', function(evt){
 
   if (evt.target.tagName === 'BUTTON') {
@@ -212,20 +227,22 @@ qwerty.addEventListener('click', function(evt){
 
 });
 
-
+// ===============
+// Start new game
+// ================
 function init() {
   guessesMissed = 0;
   // Reset hearts
-  var scoreboard = document.querySelector('#scoreboard').firstElementChild;
-  var old = document.querySelectorAll('.tries');
+  const scoreboard = document.querySelector('#scoreboard').firstElementChild;
+  const old = document.querySelectorAll('.tries');
 
   // clear screen
-  for (var i = 0; i < old.length; i++) {
+  for (let i = 0; i < old.length; i++) {
     scoreboard.removeChild(old[i]);
   }
 
-  var listItem = document.createElement('li');
-  var img = document.createElement('img');
+  const listItem = document.createElement('li');
+  const img = document.createElement('img');
   listItem.classList.add('tries');
   img.style.repeat = 'norepeat';
   img.src = "images/liveHeart.png";
@@ -236,23 +253,23 @@ function init() {
   }
 
   // Reset the keyboard
-  var buttons = document.querySelectorAll('button');
-  for (var i = 0; i < buttons.length; i++){
+  const buttons = document.querySelectorAll('button');
+  for (let i = 0; i < buttons.length; i++){
     buttons[i].removeAttribute('disabled');
     buttons[i].removeAttribute('class', 'chosen');
   }
 
   // Remove the old phrase
-  var oldLetters = ul.querySelectorAll('li');
-  // clear screen
-  for (var i = 0; i < oldLetters.length; i++) {
+  const oldLetters = ul.querySelectorAll('li');
+  // Clear old phrase from screen
+  for (let i = 0; i < oldLetters.length; i++) {
     ul.removeChild( oldLetters[i] );
   }
 
 
-  // save the result of the random phrase array split into characters
+  // Generate a random phrase from the array and save the result
   let currentPhraseChar = getRandomPhraseAsArray(phrasesArr);
-  // Call the function to add the random phrase to the DOM
+  // Call the function to add the new random phrase to the DOM
   addPhraseToDisplay(currentPhraseChar);
 
 }
