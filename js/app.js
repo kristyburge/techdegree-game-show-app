@@ -54,14 +54,14 @@ startButton.addEventListener('click', function(){
 // Generate a random phrase
 function getRandomPhraseAsArray(arr){
   // remove 1 from the array length to get the max number (inclusive)
-  var length = arr.length - 1;
+  const length = arr.length - 1;
 
   // generate a random number between 0 and length
-  var choose = getRandomNumber(0, length);
-  var currentPhrase = arr[choose];
+  const choose = getRandomNumber(0, length);
+  const currentPhrase = arr[choose];
 
   // split the phrase into array of individual characters
-  var letters = currentPhrase.split('');
+  const letters = currentPhrase.split('');
 
   return letters;
 }
@@ -97,7 +97,7 @@ function addPhraseToDisplay(arr) {
 // Check if the letter chosen matches a letter in the phrase
 function checkLetter(guessBtn) {
   // Loop through the characters in the phrase
-  for (var i = 0; i < li.length; i++) {
+  for (let i = 0; i < li.length; i++) {
     // Make sure a letter is chosen
     if ( li[i].classList.contains('letter') ) {
 
@@ -120,10 +120,10 @@ function checkWin(){
   //check if the number of letters with class “show” is equal to the number of letters with class “letters”.
 
 // STEP 1:
-  var listItemArray = document.querySelector('ul').children;
+  const listItemArray = document.querySelector('ul').children;
 
-  var counterShow = 0;
-  for (var i = 0; i < listItemArray.length; i++) {
+  let counterShow = 0;
+  for (let i = 0; i < listItemArray.length; i++) {
     // check for the 'show' class
     if(listItemArray[i].classList.contains('show')) {
       counterShow += 1;
@@ -131,8 +131,8 @@ function checkWin(){
   }
 
 // STEP 2:
-  var counterLetters = 0;
-  for (var i = 0; i < listItemArray.length; i++) {
+  let counterLetters = 0;
+  for (let i = 0; i < listItemArray.length; i++) {
     // count the number of letters (exclude spaces) in the phrase
     if(listItemArray[i].classList.contains('letter')) {
       counterLetters += 1;
@@ -143,10 +143,14 @@ function checkWin(){
     // check for a win
     if ( counterShow === counterLetters ) {
 
-      // display win overlay
-      overlay.style.display = 'flex';
-      overlay.classList.add('win');
-      overlay.appendChild(win);
+      // wait for the animation to complete
+      setTimeout(function(){
+        // display win overlay
+        overlay.style.display = 'flex';
+        overlay.classList.add('win');
+        overlay.appendChild(win);
+      }, 2000);
+
 
     } else {
         // keep playing
@@ -160,10 +164,19 @@ function checkWin(){
 
           } else if (guessesMissed === 5) {
 
-            // Otherwise, if the number of misses is equal to or greater than 5, show the overlay screen with the “lose” class
-            overlay.style.display = 'flex';
-            overlay.classList.add('lose');
-            overlay.appendChild(lose);
+            // Give animation time to finish
+            // Disable the rest of the buttons
+            const buttons = document.querySelectorAll('#qwerty button');
+            for (let i = 0; i < buttons.length; i++) {
+              buttons[i].setAttribute('disabled', '');
+            }
+
+            setTimeout(function(){
+              // Otherwise, if the number of misses is equal to or greater than 5, show the overlay screen with the “lose” class
+              overlay.style.display = 'flex';
+              overlay.classList.add('lose');
+              overlay.appendChild(lose);
+            }, 2000);
 
           }
     }
@@ -173,7 +186,7 @@ function checkWin(){
 qwerty.addEventListener('click', function(evt){
 
   if (evt.target.tagName === 'BUTTON') {
-    var character = evt.target.textContent;
+    let character = evt.target.textContent;
     evt.target.setAttribute('disabled', '');
     evt.target.classList.add('chosen');
     checkLetter(character);
@@ -187,10 +200,10 @@ qwerty.addEventListener('click', function(evt){
 
       // 2: update the DOM - remove a try
       // get the OL
-      var scoreboard = document.querySelector('#scoreboard').firstElementChild;
+      const scoreboard = document.querySelector('#scoreboard').firstElementChild;
 
       // get all list items with class 'tries'
-      var tries = document.querySelectorAll('.tries');
+      const tries = document.querySelectorAll('.tries');
       scoreboard.removeChild( tries[0] );
 
       checkWin();
